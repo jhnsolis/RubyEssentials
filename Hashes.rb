@@ -25,5 +25,23 @@ sentence.split.each do |word|
     word_frequency[word.downcase] += 1
 end
 
-puts "Word frequency of sentence \'#{sentence}\'"
+puts "Word frequency of sentence: \'#{sentence}\'"
 p word_frequency
+
+#Order of putting things in a hash is mainteined
+#You can use symbols for the key names of the hash (symbol:) NOT ':symbol'
+
+family_tree = {oldest: "Jim", older: "Joe", younger: "Jack"} #Note the symbol:
+family_tree[:youngest] = "Jeremmy" #use :symbol to access it
+p family_tree #The order is mainteined, Jeremmy is the last one in the hash
+
+#You can pass the hash as a parameter in the method
+def adjust_colors(props = {foreground: "Red", background: "White"})
+    puts "Foreground: #{props[:foreground]}" if props[:foreground]
+    puts "Background: #{props[:background]}" if props[:background]
+end
+
+#Different ways to access the values
+adjust_colors({:foreground => "Blue"})
+adjust_colors background: "Yellow"
+adjust_colors :background => "Gray"
