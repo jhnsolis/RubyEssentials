@@ -21,7 +21,8 @@ class LineAnalyzer
     @content ||= ""; @content = content
     @line_number ||= 0; @line_number = line_number
 
-    @highest_wf_words = Hash.new(0)
+    #@highest_wf_words = Hash.new(0)
+    @highest_wf_words = []
 
     calculate_word_frequency()
   end
@@ -38,22 +39,22 @@ class LineAnalyzer
     word_frequency = Hash.new(0)
 
     words.each do |word|
-        word_frequency[word] += 1
+        word_frequency[word.downcase] += 1
 
     end
     max = 0
     word_frequency.each do |word, value|
         if(value > max)
           max = value
-          #@highest_wf_words.push(word)
         end
     end
 
     @highest_wf_count = max
-
     word_frequency.each do |word, value|
       if(value == max)
-        @highest_wf_words[word]
+        puts "word #{word}"
+        #@highest_wf_words[word] = value
+        @highest_wf_words.push(word)
       end
     end
   end
@@ -71,6 +72,10 @@ class Solution
 
   attr_reader :analyzers, :highest_count_across_lines, :highest_count_words_across_lines  
 
+  def initialize
+    @analyzers = []    
+  end
+
   # Implement the following methods in the Solution class.
   #* analyze_file() - processes 'test.txt' intro an array of LineAnalyzers and stores them in analyzers.
   #* calculate_line_with_highest_frequency() - determines the highest_count_across_lines and 
@@ -82,7 +87,6 @@ class Solution
   #* Read the 'test.txt' file in lines 
   #* Create an array of LineAnalyzers for each line in the file
   def analyze_file()
-    @analyzers = []
     line_number = 0
     File.foreach('test.txt') do |line|        
         @analyzers.push(LineAnalyzer.new(line, line_number + 1))
@@ -96,11 +100,17 @@ class Solution
   #  attribute value determined previously and stores them in highest_count_words_across_lines.
   def calculate_line_with_highest_frequency()
     @highest_count_across_lines = 0
+    @highest_count_words_across_lines = []
 
     @analyzers.each do |line|
       if (line.highest_wf_count > @highest_count_across_lines)
-        @highest_count_across_lines = line.highest_wf_count
-        @highest_count_words_across_lines = line
+        @highest_count_across_lines = line.highest_wf_count        
+      end
+    end
+
+    @analyzers.each do |line|
+      if (line.highest_wf_count == @highest_count_across_lines)
+        @highest_count_words_across_lines.push(line)
       end
     end
   end
